@@ -1,54 +1,38 @@
-import React from 'react'
-import {Button} from "@/components/ui/button";
+import React from 'react';
+import { Button } from "@/components/ui/button";
 import CompanionCard from "@/components/CompanionCard";
 import CompanionList from "@/components/CompanionList";
 import CTA from "@/components/CTA";
-import {recentSessions} from "@/constants";
+import { getAllCompanions, getRecentSessions } from "@/lib/actions/companion.actions";
+import { getSubjectColor } from "@/lib/utils";
 
+export default async function Page() {
+    const companions = await getAllCompanions({ limit: 3 });
+    const recentSessionsCompanions = await getRecentSessions({ limit: 10 });
 
-const Page = () => {
-  return (
-      <main>
-      <h1 className="text-2xl underline">Popular Companions</h1>
-      <section className="home-section">
-          <CompanionCard
-          id="123"
-          name = "Neura the Briany Explorer"
-          topic = "Neural Network of the Brian "
-          subject = "science"
-          duration = {45}
-          color="#ffda6e"
-          />
-          <CompanionCard
-              id="456"
-              name = "Countsy the Number Wizard"
-              topic = "Derivatives & Integrals "
-              subject = "maths"
-              duration = {30}
-              color="#e5d0ff"
-          />
-          <CompanionCard
-              id="789"
-              name = "Verba the Vocabulary Builder"
-              topic = "Language "
-              subject = "English Literature"
-              duration = {30}
-              color="#BDE7FF"
-          />
-      </section>
+    return (
+        <main className="space-y-12 px-6 py-10">
+            <section>
+                <h1 className="text-3xl font-bold mb-6 underline">Popular Companions</h1>
+                <div className="home-section flex flex-wrap gap-6">
+                    {companions.map((companion) => (
+                        <CompanionCard
+                            key={companion.id}
+                            {...companion}
+                            color={getSubjectColor(companion.subject)}
+                        />
+                    ))}
+                </div>
+            </section>
 
-
-
-
-          <section className="home-section">
-              <CompanionList
-              title = "Recently completed sessions "
-              companions={recentSessions}
-              classNames="w-2/3 max-lg:w-full"/>
-              <CTA/>
-          </section>
-      </main>
-  )
+            <section className="home-section flex flex-col lg:flex-row gap-8">
+                <CompanionList
+                    title="Recently completed sessions"
+                    companions={recentSessionsCompanions}
+                    classNames="w-full lg:w-2/3"
+                />
+                <CTA />
+            </section>
+        </main>
+    );
 }
-
-export default Page
