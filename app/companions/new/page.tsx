@@ -1,7 +1,7 @@
 import CompanionForm from "@/components/CompanionForm";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { newCompanionPermission } from "@/lib/actions/companion.actions";
+import { newCompanionPermissions } from "@/lib/actions/companion.actions";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -12,7 +12,7 @@ const NewCompanion = async () => {
         redirect("/sign-in");
     }
 
-    const canCreateCompanion = await newCompanionPermission();
+    const canCreateCompanion = await newCompanionPermissions();
 
     return (
         <main className="w-full flex justify-center items-start py-10 px-6">
